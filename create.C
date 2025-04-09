@@ -1,9 +1,9 @@
 #include "catalog.h"
 #include <cstring>
 
-const Status RelCatalog::createRel(const string & relation, 
-				   const int attrCnt,
-				   const attrInfo attrList[])
+const Status RelCatalog::createRel(const string &relation,
+                                   const int attrCnt,
+                                   const attrInfo attrList[])
 {
   Status status;
   RelDesc rd;
@@ -27,16 +27,18 @@ const Status RelCatalog::createRel(const string & relation,
 
   unsigned int tupleWidth = attrList[0].attrLen;
 
-  if (attrCnt > 1) {
-    for(int i = 1; i < attrCnt; i++) {
+  if (attrCnt > 1)
+  {
+    for (int i = 1; i < attrCnt; i++)
+    {
       tupleWidth += attrList[i].attrLen;
-      for(int j = 0; j < i; j++)
-	if (strcmp(attrList[i].attrName, attrList[j].attrName) == 0)
-	  return DUPLATTR;
+      for (int j = 0; j < i; j++)
+        if (strcmp(attrList[i].attrName, attrList[j].attrName) == 0)
+          return DUPLATTR;
     }
   }
-  
-  if (tupleWidth > PAGESIZE)            // should be more strict
+
+  if (tupleWidth > PAGESIZE) // should be more strict
     return ATTRTOOLONG;
 
   cout << "Creating relation " << relation << endl;
@@ -52,7 +54,8 @@ const Status RelCatalog::createRel(const string & relation,
 
   strcpy(ad.relName, relation.c_str());
   int offset = 0;
-  for(int i = 0; i < attrCnt; i++) {
+  for (int i = 0; i < attrCnt; i++)
+  {
     if (strlen(attrList[i].attrName) >= sizeof ad.attrName)
       return NAMETOOLONG;
     strcpy(ad.attrName, attrList[i].attrName);
@@ -61,14 +64,15 @@ const Status RelCatalog::createRel(const string & relation,
     ad.attrLen = attrList[i].attrLen;
     if ((status = attrCat->addInfo(ad)) != OK)
     {
-	cout << "got error return"  << status << endl;
+      cout << "got error return" << status << endl;
       return status;
     }
     offset += ad.attrLen;
   }
 
   // now create the actual heapfile to hold the relation
-  status = createHeapFile (relation);
-  if (status != OK) return status;
+  status = createHeapFile(relation);
+  if (status != OK)
+    return status;
   return OK;
 }

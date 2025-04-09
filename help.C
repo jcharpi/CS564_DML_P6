@@ -10,7 +10,6 @@ using namespace std;
 
 // define if debug output wanted
 
-
 //
 // Retrieves and prints information from the catalogs about the for the
 // user. If no relation is given (relation is NULL), then it lists all
@@ -25,7 +24,7 @@ using namespace std;
 // 	error code otherwise
 //
 
-const Status RelCatalog::help(const string & relation)
+const Status RelCatalog::help(const string &relation)
 {
   Status status;
   RelDesc rd;
@@ -50,13 +49,14 @@ const Status RelCatalog::help(const string & relation)
   cout << "Relation name: " << rd.relName << " ("
        << rd.attrCnt << " attributes)" << endl;
 
-  printf("%16.16s   Off   T   Len   I\n\n",  "Attribute name");
-  for(int i = 0; i < attrCnt; i++) {
+  printf("%16.16s   Off   T   Len   I\n\n", "Attribute name");
+  for (int i = 0; i < attrCnt; i++)
+  {
     Datatype t = (Datatype)attrs[i].attrType;
     printf("%16.16s   %3d   %c   %3d\n", attrs[i].attrName,
-	   attrs[i].attrOffset,
-	   (t == INTEGER ? 'i' : (t == FLOAT ? 'f' : 's')),
-	   attrs[i].attrLen);
+           attrs[i].attrOffset,
+           (t == INTEGER ? 'i' : (t == FLOAT ? 'f' : 's')),
+           attrs[i].attrLen);
   }
 
   free(attrs);

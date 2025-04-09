@@ -11,44 +11,53 @@ Error error;
 
 RelCatalog *relCat;
 AttrCatalog *attrCat;
-#define CALL(c)    {Status s;if((s=c)!=OK){error.print(s);exit(1);}}
-
+#define CALL(c)        \
+  {                    \
+    Status s;          \
+    if ((s = c) != OK) \
+    {                  \
+      error.print(s);  \
+      exit(1);         \
+    }                  \
+  }
 
 int main(int argc, char *argv[])
 {
-  if (argc < 2) {
+  if (argc < 2)
+  {
     cerr << "Usage: " << argv[0] << " dbname" << endl;
     return 1;
   }
 
   // create database subdirectory and chdir there
 
-  if (mkdir(argv[1], S_IRUSR | S_IWUSR | S_IXUSR
-	             | S_IRGRP | S_IWGRP | S_IXGRP) < 0) {
+  if (mkdir(argv[1], S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP) < 0)
+  {
     perror("mkdir");
     exit(1);
   }
 
-
-  if (chdir(argv[1]) < 0) {
+  if (chdir(argv[1]) < 0)
+  {
     perror("chdir");
     exit(1);
   }
 
   // create buffer manager
-  
+
   bufMgr = new BufMgr(100);
-  
 
   Status status;
   // create heapfiles to hold the relcat and attribute catalogs
   status = createHeapFile("relcat");
-  if (status != OK) {
+  if (status != OK)
+  {
     error.print(status);
     exit(1);
   }
   status = createHeapFile("attrcat");
-  if (status != OK) {
+  if (status != OK)
+  {
     error.print(status);
     exit(1);
   }
@@ -57,7 +66,8 @@ int main(int argc, char *argv[])
   relCat = new RelCatalog(status);
   if (status == OK)
     attrCat = new AttrCatalog(status);
-  if (status != OK) {
+  if (status != OK)
+  {
     error.print(status);
     exit(1);
   }

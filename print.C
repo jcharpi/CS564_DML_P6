@@ -2,26 +2,26 @@
 #include "catalog.h"
 #include "utility.h"
 
-
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
-#define MIN(a,b) ((a) < (b) ? (a) : (b))
-
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 //
 // Compute widths of columns in attribute array.
 //
 
-const Status UT_computeWidth(const int attrCnt, 
-			     const AttrDesc attrs[], 
-			     int *&attrWidth)
+const Status UT_computeWidth(const int attrCnt,
+                             const AttrDesc attrs[],
+                             int *&attrWidth)
 {
-  attrWidth = new int [attrCnt];
+  attrWidth = new int[attrCnt];
   if (!attrWidth)
     return INSUFMEM;
 
-  for(int i = 0; i < attrCnt; i++) {
+  for (int i = 0; i < attrCnt; i++)
+  {
     int namelen = strlen(attrs[i].attrName);
-    switch(attrs[i].attrType) {
+    switch (attrs[i].attrType)
+    {
     case INTEGER:
     case FLOAT:
       attrWidth[i] = MIN(MAX(namelen, 5), 7);
@@ -35,18 +35,19 @@ const Status UT_computeWidth(const int attrCnt,
   return OK;
 }
 
-
 //
 // Prints values of attributes stored in buffer pointed to
 // by recPtr. The desired width of columns is in attrWidth.
 //
 
 void UT_printRec(const int attrCnt, const AttrDesc attrs[], int *attrWidth,
-		 const Record & rec)
+                 const Record &rec)
 {
-  for(int i = 0; i < attrCnt; i++) {
+  for (int i = 0; i < attrCnt; i++)
+  {
     char *attr = (char *)rec.data + attrs[i].attrOffset;
-    switch(attrs[i].attrType) {
+    switch (attrs[i].attrType)
+    {
     case INTEGER:
       int tempi;
       memcpy(&tempi, attr, sizeof(int));
@@ -66,7 +67,6 @@ void UT_printRec(const int attrCnt, const AttrDesc attrs[], int *attrWidth,
   printf("\n");
 }
 
-
 //
 // Prints the contents of the specified relation.
 //
@@ -82,10 +82,12 @@ const Status UT_Print(string relation)
   AttrDesc *attrs;
   int attrCnt;
 
-  if (relation.empty()) relation = RELCATNAME;
+  if (relation.empty())
+    relation = RELCATNAME;
 
   // get relation data
-  if ((status = relCat->getInfo(relation, rd)) != OK) return status;
+  if ((status = relCat->getInfo(relation, rd)) != OK)
+    return status;
 
   // get attribute data
   if ((status = attrCat->getRelInfo(rd.relName, attrCnt, attrs)) != OK)
@@ -99,20 +101,25 @@ const Status UT_Print(string relation)
 
   // open data file
   HeapFileScan *hfile = new HeapFileScan(rd.relName, status);
-  if (!hfile) return INSUFMEM;
-  if (status != OK) return status;
+  if (!hfile)
+    return INSUFMEM;
+  if (status != OK)
+    return status;
 
-  cout << "Relation name: " << rd.relName << endl << endl;
+  cout << "Relation name: " << rd.relName << endl
+       << endl;
 
   int i;
-  for(i = 0; i < attrCnt; i++) {
+  for (i = 0; i < attrCnt; i++)
+  {
     printf("%-*.*s ", attrWidth[i], attrWidth[i],
-	   attrs[i].attrName);
+           attrs[i].attrName);
   }
   printf("\n");
 
-  for(i = 0; i < attrCnt; i++) {
-    for(int j = 0; j < attrWidth[i]; j++)
+  for (i = 0; i < attrCnt; i++)
+  {
+    for (int j = 0; j < attrWidth[i]; j++)
       putchar('-');
     printf("  ");
   }
@@ -125,7 +132,8 @@ const Status UT_Print(string relation)
   RID rid;
 
   int records = 0;
-  while((status = hfile->scanNext(rid)) == OK) {
+  while ((status = hfile->scanNext(rid)) == OK)
+  {
     if ((status = hfile->getRecord(rec)) != OK)
       return status;
     UT_printRec(attrCnt, attrs, attrWidth, rec);
@@ -134,9 +142,10 @@ const Status UT_Print(string relation)
   if (status != FILEEOF)
     return status;
 
-  cout << endl << "Number of records: " << records << endl;
+  cout << endl
+       << "Number of records: " << records << endl;
 
-  delete []attrWidth;
+  delete[] attrWidth;
   free(attrs);
 
   // close scan and data file

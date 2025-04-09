@@ -1,8 +1,8 @@
 #include <string.h>
 
-#define MAXCHAR 5000                    // size of buffer of strings
+#define MAXCHAR 5000 // size of buffer of strings
 
-static char charpool[MAXCHAR];          // buffer for string allocation
+static char charpool[MAXCHAR]; // buffer for string allocation
 static int charptr = 0;
 
 static int lower(char *dst, char *src, int max);
@@ -15,17 +15,17 @@ static char *string_alloc(int len)
 {
   char *s;
 
-  if (charptr + len > MAXCHAR) {
+  if (charptr + len > MAXCHAR)
+  {
     fprintf(stderr, "out of memory\n");
     exit(1);
   }
 
   s = charpool + charptr;
   charptr += len;
-  
+
   return s;
 }
-
 
 //
 // reset_charptr: releases all memory allocated in preparation for the
@@ -39,7 +39,6 @@ void reset_charptr(void)
   charptr = 0;
 }
 
-
 //
 // reset_scanner: resets the scanner after a syntax error
 //
@@ -51,7 +50,6 @@ void reset_scanner(void)
   charptr = 0;
   yyrestart(yyin);
 }
-
 
 //
 // get_id: determines whether s is a reserved word, and returns the
@@ -128,7 +126,6 @@ static int get_id(char *s)
   return T_STRING;
 }
 
-
 //
 // lower: copies src to dst, converting it to lowercase, stopping at the
 // end of src or after max characters.
@@ -141,8 +138,9 @@ static int get_id(char *s)
 static int lower(char *dst, char *src, int max)
 {
   int len;
-    
-  for(len = 0; len < max && src[len] != '\0'; ++len) {
+
+  for (len = 0; len < max && src[len] != '\0'; ++len)
+  {
     dst[len] = src[len];
     if (src[len] >= 'A' && src[len] <= 'Z')
       dst[len] += 'a' - 'A';
@@ -151,7 +149,6 @@ static int lower(char *dst, char *src, int max)
 
   return len;
 }
-
 
 //
 // get_qstring: removes the quotes from a quoted string, allocates
@@ -170,7 +167,6 @@ static char *get_qstring(char *qstring, int len)
   return mk_string(qstring + 1, len - 2);
 }
 
-
 //
 // mk_string: allocates space for a string of length len and copies s into
 // it.
@@ -184,11 +180,12 @@ static char *mk_string(char *s, int len)
   char *copy;
 
   // allocate space for new string
-  if ((copy = string_alloc(len + 1)) == NULL) {
+  if ((copy = string_alloc(len + 1)) == NULL)
+  {
     printf("out of string space\n");
     exit(1);
   }
-  
+
   // copy the string
   strncpy(copy, s, len + 1);
   return copy;

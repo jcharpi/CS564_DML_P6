@@ -3,7 +3,6 @@
 #include "catalog.h"
 #include "utility.h"
 
-
 //
 // Loads a file of (binary) tuples from a standard file into the relation.
 // Any indices on the relation are updated appropriately.
@@ -13,15 +12,14 @@
 // 	an error code otherwise
 //
 
-const Status UT_Load(const string & relation, const string & fileName)
+const Status UT_Load(const string &relation, const string &fileName)
 {
   Status status;
   RelDesc rd;
   AttrDesc *attrs;
   int attrCnt;
 
-  if (relation.empty() || fileName.empty() || relation == string(RELCATNAME)
-      || relation == string(ATTRCATNAME))
+  if (relation.empty() || fileName.empty() || relation == string(RELCATNAME) || relation == string(ATTRCATNAME))
     return BADCATPARM;
 
   // open Unix data file
@@ -32,7 +30,8 @@ const Status UT_Load(const string & relation, const string & fileName)
 
   // get relation data
 
-  if ((status = relCat->getInfo(relation, rd)) != OK) return status;
+  if ((status = relCat->getInfo(relation, rd)) != OK)
+    return status;
 
   // get attribute data
   if ((status = attrCat->getRelInfo(rd.relName, attrCnt, attrs)) != OK)
@@ -40,9 +39,11 @@ const Status UT_Load(const string & relation, const string & fileName)
 
   // open data file
 
-  InsertFileScan* iFile = new InsertFileScan(rd.relName, status);
-  if (!iFile) return INSUFMEM;
-  if (status != OK) return status;
+  InsertFileScan *iFile = new InsertFileScan(rd.relName, status);
+  if (!iFile)
+    return INSUFMEM;
+  if (status != OK)
+    return status;
 
   int records = 0;
 
@@ -50,23 +51,27 @@ const Status UT_Load(const string & relation, const string & fileName)
   int width = 0;
   int i;
 
-  for(i = 0; i < attrCnt; i++) {
+  for (i = 0; i < attrCnt; i++)
+  {
     width += attrs[i].attrLen;
   }
 
   // create a record for constructing the tuple
 
   char *record;
-  if (!(record = new char [width])) return INSUFMEM;
+  if (!(record = new char[width]))
+    return INSUFMEM;
 
   int nbytes;
   Record rec;
 
-  while((nbytes = read(fd, record, width)) == width) {
+  while ((nbytes = read(fd, record, width)) == width)
+  {
     RID rid;
     rec.data = record;
     rec.length = width;
-    if ((status = iFile->insertRecord(rec, rid)) != OK) return status;
+    if ((status = iFile->insertRecord(rec, rid)) != OK)
+      return status;
     records++;
   }
 
@@ -75,9 +80,10 @@ const Status UT_Load(const string & relation, const string & fileName)
   // close heap file and data file
 
   delete iFile;
-  if (close(fd) < 0) return UNIXERR;
+  if (close(fd) < 0)
+    return UNIXERR;
 
-  delete [] record;
+  delete[] record;
   free(attrs);
 
   return OK;

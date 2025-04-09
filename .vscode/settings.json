@@ -1,0 +1,31 @@
+{
+  "files.associations": {
+    "buf.C": "cpp",
+    "bufHash.C": "cpp",
+    "catalog.C": "cpp",
+    "db.C": "cpp",
+    "create.C": "cpp",
+    "dbcreate.C": "cpp",
+    "dbdestroy.C": "cpp",
+    "delete.C": "cpp",
+    "destroy.C": "cpp",
+    "error.C": "cpp",
+    "heapfile.C": "cpp",
+    "help.C": "cpp",
+    "insert.C": "cpp",
+    "join.C": "cpp",
+    "joinHT.C": "cpp",
+    "load.C": "cpp",
+    "minirel.C": "cpp",
+    "page.C": "cpp",
+    "partition.C": "cpp",
+    "print.C": "cpp",
+    "quit.C": "cpp",
+    "select.C": "cpp",
+    "sort.C": "cpp",
+    "interp.C": "cpp",
+    "nodes.C": "cpp",
+    "scanhelp.C": "cpp"
+  },
+  "C_Cpp.default.compilerPath": "/usr/bin/gcc"
+}

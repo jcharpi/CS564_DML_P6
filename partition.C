@@ -7,7 +7,6 @@
 using namespace std;
 #include "partition.h"
 
-
 // The Partition class splits a heap file into P partitions, using
 // a hash function provided by the caller. The hash function must
 // return an integer in the range 0 to P-1.
@@ -23,14 +22,13 @@ using namespace std;
 // files as HeapFiles. The partition files are destroyed by the destructor
 // of the Partition class.
 
-Partition::Partition(HeapFileScan *rel, 
-		     const string &fileName, 
-		     const int P,
-		     const int (*hashfcn)(const Record & record,
-					  const int P),
-		     string* &partName, 
-		     Status &status) :
-  P(P), partName(NULL)
+Partition::Partition(HeapFileScan *rel,
+                     const string &fileName,
+                     const int P,
+                     const int (*hashfcn)(const Record &record,
+                                          const int P),
+                     string *&partName,
+                     Status &status) : P(P), partName(NULL)
 {
   InsertFileScan **part;
   int p;
@@ -41,7 +39,8 @@ Partition::Partition(HeapFileScan *rel,
 
   // create list of partition heap files and file names
 
-  if (!(part = new InsertFileScan * [P]) || !(partName = new string[P])) {
+  if (!(part = new InsertFileScan *[P]) || !(partName = new string[P]))
+  {
     status = INSUFMEM;
     return;
   }
@@ -49,13 +48,15 @@ Partition::Partition(HeapFileScan *rel,
   // construct names of partition files (fileName.p where p = 0 to P-1)
   // and create heap files on disk
 
-  for(p = 0; p < P; p++) {
+  for (p = 0; p < P; p++)
+  {
 
-    stringstream  s;
+    stringstream s;
     s << "/tmp/" << fileName << '.' << p << ends;
     partName[p] = s.str();
 
-    if (!(part[p] = new InsertFileScan(partName[p], status))) {
+    if (!(part[p] = new InsertFileScan(partName[p], status)))
+    {
       status = INSUFMEM;
       return;
     }
@@ -71,10 +72,11 @@ Partition::Partition(HeapFileScan *rel,
   // corresponding partition file
 
   if ((status = rel->startScan(0, sizeof(int), INTEGER, NULL,
-			       EQ)) != OK)
+                               EQ)) != OK)
     return;
 
-  while(1) {
+  while (1)
+  {
     Record rec;
     RID rid;
 
@@ -92,7 +94,7 @@ Partition::Partition(HeapFileScan *rel,
 
   // close partition files and deallocate memory
 
-  for(p = 0; p < P; p++)
+  for (p = 0; p < P; p++)
     delete part[p];
   delete part;
 
@@ -103,7 +105,6 @@ Partition::Partition(HeapFileScan *rel,
   return;
 }
 
-
 // The destructor will destroy the heap files where partitions were stored.
 
 Partition::~Partition()
@@ -111,7 +112,8 @@ Partition::~Partition()
   if (!partName)
     return;
 
-  for(int p = 0; p < P; p++) {
+  for (int p = 0; p < P; p++)
+  {
     if (db.destroyFile(partName[p]) != OK)
       cerr << "error destroying " << partName[p] << endl;
   }

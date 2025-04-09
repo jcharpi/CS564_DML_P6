@@ -13,12 +13,12 @@
 // 	error code otherwise
 //
 
-const Status RelCatalog::destroyRel(const string & relation)
+const Status RelCatalog::destroyRel(const string &relation)
 {
   Status status;
 
-  if (relation.empty() || 
-      relation == string(RELCATNAME) || 
+  if (relation.empty() ||
+      relation == string(RELCATNAME) ||
       relation == string(ATTRCATNAME))
     return BADCATPARM;
 
@@ -39,7 +39,6 @@ const Status RelCatalog::destroyRel(const string & relation)
   return OK;
 }
 
-
 //
 // Drops a relation. It performs the following steps:
 //
@@ -50,7 +49,7 @@ const Status RelCatalog::destroyRel(const string & relation)
 // 	error code otherwise
 //
 
-const Status AttrCatalog::dropRelation(const string & relation)
+const Status AttrCatalog::dropRelation(const string &relation)
 {
   Status status;
   AttrDesc *attrs;
@@ -66,7 +65,8 @@ const Status AttrCatalog::dropRelation(const string & relation)
 
   // remove entries from catalog
 
-  for(i = 0; i < attrCnt; i++) {
+  for (i = 0; i < attrCnt; i++)
+  {
     if ((status = removeInfo(relation, attrs[i].attrName)) != OK)
       return status;
   }
@@ -75,6 +75,3 @@ const Status AttrCatalog::dropRelation(const string & relation)
 
   return OK;
 }
-
-
-
