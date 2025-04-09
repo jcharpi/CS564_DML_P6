@@ -1,3 +1,18 @@
+// select.C
+//
+// This file implements the selection operator for Minirel.
+//
+// A selection is implemented using a filtered HeapFileScan. The result of the selection is stored in the result relation called 
+// result (a heapfile with this name will be created by the parser before QU_Select() is called). The project list is defined by the parameters projCnt 
+// and projNames. Projection should be performed on the fly as each result tuple is being appended to the result table.
+//
+// The search value is always supplied as the character string attrValue. You should convert it to the proper type based on the type of attr. 
+// You can use the atoi() function to convert a char* to an integer and atof() to convert it to a float.
+//
+// If attr is NULL, an unconditional scan of the input table should be performed.
+//
+// This implementation sets up a filtered scan for a selection predicate and
+// performs on‐the‐fly projection via a helper function, ScanSelect().
 #include "catalog.h"
 #include "query.h"
 
