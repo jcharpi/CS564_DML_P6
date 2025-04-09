@@ -133,7 +133,7 @@ const Status ScanSelect(const string &result,
   else
   {
     Datatype type;
-    void *updatedTypeFilter = NULL;
+    void *updatedTypeFilter;
     if (attrDesc->attrType == STRING)
     {
       type = STRING;
@@ -171,8 +171,7 @@ const Status ScanSelect(const string &result,
   {
     Record rec;
     status = scan.getRecord(rec);
-    if (status != OK)
-      return status;
+    ASSERT(status == OK);
 
     int outputOffset = 0;
     // For a match, copy data into output record
@@ -185,8 +184,7 @@ const Status ScanSelect(const string &result,
     // Insert the constructed record into the result relation.
     RID outRID;
     status = resultRel.insertRecord(outputRec, outRID);
-    if (status != OK)
-      return status;
+    ASSERT(status == OK);
     outputTupleCount++;
   }
 
