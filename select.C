@@ -48,7 +48,6 @@ const Status QU_Select(const string &result,
 {
   // Qu_Select sets up things and then calls ScanSelect to do the actual work
   cout << "Doing QU_Select " << endl;
-
   Status status;
 
   // Create an array of AttrDesc structures, one for each attribute in the projection list.
@@ -126,35 +125,35 @@ const Status ScanSelect(const string &result,
   // 1. If filter is NULL, perform an unconditional scan.
   if (filter == NULL)
   {
-    Datatype type = STRING;
-    status = scan.startScan(attrDesc->attrOffset, attrDesc->attrLen, type, NULL, EQ);
+    status = scan.startScan(attrDesc->attrOffset, attrDesc->attrLen, STRING, NULL, EQ);
   }
 
   // 2. If filter is provided, perform a filtered scan using the supplied value.
   // Determine attribute's data type and convert the filter string accordingly.
-  Datatype type;
-  void *updatedTypeFilter = NULL;
-  if (attrDesc->attrType == STRING)
-  {
-    type = STRING;
-    updatedTypeFilter = (void *)filter; // No conversion needed for strings
-  }
-  else if (attrDesc->attrType == INTEGER)
-  {
-    type = INTEGER;
-    int tempInt = atoi(filter); // Convert the filter to an integer
-    updatedTypeFilter = &tempInt;
-  }
   else
   {
-    type = FLOAT;
-    int tempFloat = atof(filter); // Convert the filter to an float
-    updatedTypeFilter = &tempFloat;
-  }
-  status = scan.startScan(attrDesc->attrOffset, attrDesc->attrLen, type, (char *)updatedTypeFilter, op);
-  if (status != OK)
-  {
-    return status;
+    Datatype type;
+    void *updatedTypeFilter = NULL;
+    if (attrDesc->attrType == STRING)
+    {
+      type = STRING;
+      updatedTypeFilter = (void *)filter; // No conversion needed for strings
+    }
+    else if (attrDesc->attrType == INTEGER)
+    {
+      type = INTEGER;
+      int tempInt = atoi(filter); // Convert the filter to an integer
+      updatedTypeFilter = &tempInt;
+    }
+    else
+    {
+      type = FLOAT;
+      float tempFloat = atof(filter); // Convert the filter to an float
+      updatedTypeFilter = &tempFloat;
+    }
+    status = scan.startScan(attrDesc->attrOffset, attrDesc->attrLen, type, (char *)updatedTypeFilter, op);
+    if (status != OK)
+      return status;
   }
 
   // Prep a temporary buffer to build each output tuple. The output tuple will consist of only the projected attributes and must
