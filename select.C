@@ -187,8 +187,5 @@ const Status ScanSelect(const string &result,
     ASSERT(status == OK);
     outputTupleCount++;
   }
-
-  // Report the total number of result tuples produced.
-  printf("tuple nested join produced %d result tuples \n", outputTupleCount);
   return OK;
 }
