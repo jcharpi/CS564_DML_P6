@@ -80,7 +80,7 @@ const Status QU_Insert(const string & relation,
                 break;
             }
         }
-		// If value missing in input, reject
+	// If value missing in input, reject
         if (!found) {
             delete[] recData;
             delete[] relAttrs;
