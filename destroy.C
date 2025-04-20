@@ -1,6 +1,7 @@
 #include "catalog.h"
 #include <string>
 #include <cstring>
+#include <iostream>
 
 //
 // Destroys a relation. It performs the following steps:

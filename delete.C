@@ -15,6 +15,7 @@
   const Datatype type, 
   const char *attrValue)
 {
+std::cout << "Doing QU_Delete " << std::endl;
 Status status;
 HeapFileScan* hfs = new HeapFileScan(relation, status);
 if(status != OK)
