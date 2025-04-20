@@ -10,6 +10,7 @@
 
 #include "catalog.h"
 #include "query.h"
+#include <iostream>
 
 /*
  * Inserts a record into the specified relation.
@@ -23,6 +24,7 @@ const Status QU_Insert(const string & relation,
 	const int attrCnt, 
 	const attrInfo attrList[])
 {
+	std::cout << "Doing QU_Insert " << std::endl;
 	Status status = OK;
 	int relAttrCnt;
 	AttrDesc *relAttrs;
